@@ -8,3 +8,6 @@ const val ROUT_DASHBOARD = "about"
 //Authentication
 const val ROUT_REGISTER = "Register"
 const val ROUT_LOGIN = "Login"
+const val ROUT_SPLASH = "splash"
+const val ROUT_WELCOME = "welcome"
+const val ROUT_WELCOME2 = "welcome2"

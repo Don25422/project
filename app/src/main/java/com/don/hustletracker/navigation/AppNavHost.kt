@@ -13,13 +13,16 @@ import com.don.hustletracker.ui.screens.about.AboutScreen
 import com.don.hustletracker.ui.screens.auth.LoginScreen
 import com.don.hustletracker.ui.screens.auth.RegisterScreen
 import com.don.hustletracker.ui.screens.home.HomeScreen
+import com.don.hustletracker.ui.screens.welcomscreens.SplashScreen
+import com.don.hustletracker.ui.screens.welcomscreens.WelcomeScreen
+import com.don.hustletracker.ui.screens.welcomscreens.WelcomeScreen2
 import com.don.hustletracker.viewmodel.AuthViewModel
 
 @Composable
 fun AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = ROUT_LOGIN
+    startDestination: String = ROUT_SPLASH
 ) {
 
     val context = LocalContext.current
@@ -56,6 +59,17 @@ fun AppNavHost(
                 }
             }
         }
+
+        composable(ROUT_SPLASH) {
+            SplashScreen(navController)
+        }
+        composable(ROUT_WELCOME) {
+            WelcomeScreen(navController)
+        }
+        composable(ROUT_WELCOME2) {
+            WelcomeScreen2(navController)
+        }
+
 
     }
 }
