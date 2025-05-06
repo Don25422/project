@@ -7,8 +7,10 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -21,7 +23,9 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,6 +33,10 @@ import androidx.navigation.NavController
 import com.don.hustletracker.R
 import com.don.hustletracker.model.User
 import com.don.hustletracker.navigation.ROUT_LOGIN
+import com.don.hustletracker.ui.theme.jetblack
+import com.don.hustletracker.ui.theme.login
+import com.don.hustletracker.ui.theme.up
+import com.don.hustletracker.ui.theme.white
 import com.don.hustletracker.viewmodel.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,162 +62,213 @@ fun RegisterScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .background(jetblack),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(8.dp))
-        AnimatedVisibility(visible = true, enter = fadeIn(), exit = fadeOut()) {
-            Text(
-                "Create Your Account",
-                fontSize = 40.sp,
-                fontFamily = FontFamily.Cursive
+        Row ( modifier = Modifier.padding(top = 100.dp)){
+            Image(
+                painter = painterResource(R.drawable.arrow),
+                contentDescription = "home",
+                modifier = Modifier.height(100.dp).width(100.dp).padding(bottom = 10.dp)
             )
-        }
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Column {
+                Text(text="HUSTLE",
+                    color = white,
+                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 46.sp,
+                    fontFamily = FontFamily.Serif,
+                )
+                Spacer(modifier = Modifier.height(0.5.dp))
 
-        //Username
-        OutlinedTextField(
-            value = username,
-            onValueChange = { username = it },
-            label = { Text("Username") },
-            leadingIcon = { Icon(Icons.Filled.Person, contentDescription = "Username Icon") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        //End of username
+                Text(text="TRACKER",
+                    color = white,
+                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 46.sp,
+                    fontFamily = FontFamily.Serif,
+                )
 
-
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        //Email
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") },
-            leadingIcon = { Icon(Icons.Filled.Email, contentDescription = "Email Icon") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-            modifier = Modifier.fillMaxWidth()
-        )
-        //End of email
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-
-        //Role
-        var role by remember { mutableStateOf("user") }
-        val roleOptions = listOf("user", "admin")
-        var expanded by remember { mutableStateOf(false) }
-
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = { expanded = !expanded }
-        ) {
-            OutlinedTextField(
-                value = role,
-                onValueChange = {},
-                readOnly = true,
-                label = { Text("Select Role") },
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                modifier = Modifier.menuAnchor().fillMaxWidth()
-            )
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                roleOptions.forEach { selectionOption ->
-                    DropdownMenuItem(
-                        text = { Text(selectionOption) },
-                        onClick = {
-                            role = selectionOption
-                            expanded = false
-                        }
-                    )
-                }
             }
         }
-        //End of role
+
+        Spacer(modifier = Modifier.height(20.dp))
 
 
-
-
-
-
-        // Password Input Field with Show/Hide Toggle
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Password") },
-            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            leadingIcon = { Icon(Icons.Filled.Lock, contentDescription = "Password Icon") },
-            trailingIcon = {
-                val image = if (passwordVisible) painterResource(R.drawable.visibility)  else painterResource(R.drawable.visibilityoff)
-                IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                    Icon(image, contentDescription = if (passwordVisible) "Hide Password" else "Show Password")
-                }
-            },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Confirm Password Input Field with Show/Hide Toggle
-        OutlinedTextField(
-            value = confirmPassword,
-            onValueChange = { confirmPassword = it },
-            label = { Text("Confirm Password") },
-            visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            leadingIcon = { Icon(Icons.Filled.Lock, contentDescription = "Confirm Password Icon") },
-            trailingIcon = {
-                val image = if (confirmPasswordVisible) painterResource(R.drawable.visibility)  else painterResource(R.drawable.visibilityoff)
-                IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
-                    Icon(image, contentDescription = if (confirmPasswordVisible) "Hide Password" else "Show Password")
-                }
-            },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(5.dp))
-
-        Box(
+        Card (
             modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp)
-                .background(
-                    brush = Brush.horizontalGradient(
-                        colors = listOf(Color(0xFF00C6FF), Color(0xFF0072FF))
-                    ),
-                    shape = MaterialTheme.shapes.medium
-                ),
-            contentAlignment = Alignment.Center
-        ) {
-            Button(
-                onClick = {
-                    if (username.isBlank() || email.isBlank() || password.isBlank() || confirmPassword.isBlank()) {
-                        Toast.makeText(context, "All fields are required", Toast.LENGTH_SHORT).show()
-                    } else if (password != confirmPassword) {
-                        Toast.makeText(context, "Passwords do not match", Toast.LENGTH_SHORT).show()
-                    } else {
-                        authViewModel.registerUser(User(username = username, email = email, role = role, password = password))
-                        onRegisterSuccess()
-                    }
-                },
-                modifier = Modifier.fillMaxSize(),
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
-            ) {
-                Text("Register", color = Color.White)
-            }
-        }
+                .padding(24.dp)
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(login)
 
+
+        ){
+            Column (modifier = Modifier.padding(24.dp)){
+
+                Text(
+                    text = "Sign Up",
+                    fontWeight = FontWeight.Bold,
+                    color = white,
+
+                    )
+
+                //Username
+                OutlinedTextField(
+                    value = username,
+                    onValueChange = { username = it },
+                    label = { Text("Username",color = white) },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    textStyle = TextStyle(color = white)
+                )
+                //End of username
+
+
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                //Email
+                OutlinedTextField(
+                    value = email,
+                    onValueChange = { email = it },
+                    label = { Text("Email",color = white) },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    textStyle = TextStyle(color = white)
+                )
+                //End of email
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+
+                //Role
+                var role by remember { mutableStateOf("user") }
+                val roleOptions = listOf("user", "admin")
+                var expanded by remember { mutableStateOf(false) }
+
+                ExposedDropdownMenuBox(
+                    expanded = expanded,
+                    onExpandedChange = { expanded = !expanded }
+                ) {
+                    OutlinedTextField(
+                        value = role,
+                        onValueChange = {},
+                        readOnly = true,
+                        label = { Text("Select Role",color = white) },
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                        modifier = Modifier.menuAnchor().fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp),
+                        textStyle = TextStyle(color = white)
+                    )
+                    ExposedDropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        roleOptions.forEach { selectionOption ->
+                            DropdownMenuItem(
+                                text = { Text(selectionOption) },
+                                onClick = {
+                                    role = selectionOption
+                                    expanded = false
+                                }
+                            )
+                        }
+                    }
+                }
+                //End of role
+
+
+
+
+
+
+                // Password Input Field with Show/Hide Toggle
+                OutlinedTextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    label = { Text("Password",color = white) },
+                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    trailingIcon = {
+                        val image = if (passwordVisible) painterResource(R.drawable.img_5)  else painterResource(
+                            R.drawable.img_6
+                        )
+                        IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                            Icon(image, contentDescription = if (passwordVisible) "Hide Password" else "Show Password")
+                        }
+                    },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    textStyle = TextStyle(color = white)
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Confirm Password Input Field with Show/Hide Toggle
+                OutlinedTextField(
+                    value = confirmPassword,
+                    onValueChange = { confirmPassword = it },
+                    label = { Text("Confirm Password", color = white,) },
+                    visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    trailingIcon = {
+                        val image = if (confirmPasswordVisible) painterResource(R.drawable.img_5)  else painterResource(R.drawable.img_6
+                        )
+                        IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
+                            Icon(image, contentDescription = if (confirmPasswordVisible) "Hide Password" else "Show Password")
+                        }
+                    },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    textStyle = TextStyle(color = white)
+                )
+
+                Spacer(modifier = Modifier.height(5.dp))
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp)
+                        .background(
+                            brush = Brush.horizontalGradient(
+                                colors = listOf(Color(0xFFFFD700), Color(0xFFFFD700))
+                            ),
+                            shape = MaterialTheme.shapes.medium
+                        ),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Button(
+                        onClick = {
+                            if (username.isBlank() || email.isBlank() || password.isBlank() || confirmPassword.isBlank()) {
+                                Toast.makeText(context, "All fields are required", Toast.LENGTH_SHORT).show()
+                            } else if (password != confirmPassword) {
+                                Toast.makeText(context, "Passwords do not match", Toast.LENGTH_SHORT).show()
+                            } else {
+                                authViewModel.registerUser(User(username = username, email = email, role = role, password = password))
+                                onRegisterSuccess()
+                            }
+                        },
+                        modifier = Modifier.fillMaxSize(),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Text("Register", color = Color.White)
+                    }
+                }
+            }
+
+
+        }
         Spacer(modifier = Modifier.height(5.dp))
 
         TextButton(
             onClick = { navController.navigate(ROUT_LOGIN) }
         ) {
-            Text("Already have an account? Login")
+            Text("Already have an account?", color = white)
+            Spacer(modifier = Modifier.width(1.dp))
+            Text("Login", color = up)
         }
     }
 }

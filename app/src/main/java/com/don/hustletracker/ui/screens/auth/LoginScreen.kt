@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.*
@@ -32,8 +33,10 @@ import com.don.hustletracker.navigation.ROUT_ITEM
 
 
 import com.don.hustletracker.navigation.ROUT_REGISTER
+import com.don.hustletracker.ui.theme.focused
 import com.don.hustletracker.ui.theme.jetblack
 import com.don.hustletracker.ui.theme.login
+import com.don.hustletracker.ui.theme.unfocused
 import com.don.hustletracker.ui.theme.up
 import com.don.hustletracker.ui.theme.white
 import com.don.hustletracker.viewmodel.AuthViewModel
@@ -102,7 +105,6 @@ fun LoginScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
 
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -138,6 +140,7 @@ fun LoginScreen(
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
+                    textStyle = TextStyle(color = white)
 
                 )
 
@@ -155,11 +158,12 @@ fun LoginScreen(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
                     trailingIcon = {
-                        val image = if (passwordVisible) painterResource(R.drawable.visibility) else painterResource(R.drawable.visibilityoff)
+                        val image = if (passwordVisible) painterResource(R.drawable.img_5) else painterResource(R.drawable.img_6)
                         IconButton(onClick = { passwordVisible = !passwordVisible }) {
                             Icon(image, contentDescription = if (passwordVisible) "Hide Password" else "Show Password")
                         }
-                    }
+                    },
+                    textStyle = TextStyle(color = white)
                 )
 
                 Spacer(modifier = Modifier.height(10.dp).padding(start = 900.dp))

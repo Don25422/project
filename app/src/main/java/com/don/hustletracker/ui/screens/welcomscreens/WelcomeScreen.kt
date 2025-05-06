@@ -49,7 +49,7 @@ fun WelcomeScreen(navController: NavController){
                 Image(
                     painter = painterResource(R.drawable.arrow),
                     contentDescription = "home",
-                    modifier = Modifier.height(100.dp).width(100.dp)
+                    modifier = Modifier.height(100.dp).width(100.dp).padding(bottom =10.dp)
                 )
 
                Column {

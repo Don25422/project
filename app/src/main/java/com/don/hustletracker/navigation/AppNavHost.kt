@@ -12,7 +12,9 @@ import com.don.hustletracker.repository.UserRepository
 import com.don.hustletracker.ui.screens.about.AboutScreen
 import com.don.hustletracker.ui.screens.auth.LoginScreen
 import com.don.hustletracker.ui.screens.auth.RegisterScreen
+import com.don.hustletracker.ui.screens.dashboard.DashboardScreen
 import com.don.hustletracker.ui.screens.home.HomeScreen
+import com.don.hustletracker.ui.screens.task.TaskScreen
 import com.don.hustletracker.ui.screens.welcomscreens.SplashScreen
 import com.don.hustletracker.ui.screens.welcomscreens.WelcomeScreen
 import com.don.hustletracker.ui.screens.welcomscreens.WelcomeScreen2
@@ -69,6 +71,14 @@ fun AppNavHost(
         composable(ROUT_WELCOME2) {
             WelcomeScreen2(navController)
         }
+        composable(ROUT_DASHBOARD) {
+            DashboardScreen(navController)
+        }
+        composable(ROUT_TASK) {
+            TaskScreen(navController)
+        }
+
+
 
 
     }
