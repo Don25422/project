@@ -1,6 +1,7 @@
 package com.don.hustletracker.ui.screens.task
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -8,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,27 +18,24 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ListItemDefaults.contentColor
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,109 +43,127 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.don.hustletracker.navigation.ROUT_HOME
+import com.don.hustletracker.data.TaskDao
+import com.don.hustletracker.model.Task
+import com.don.hustletracker.navigation.ROUT_ADDTASK
+import com.don.hustletracker.navigation.ROUT_WELCOME2
+import com.don.hustletracker.repository.TaskRepository
+import com.don.hustletracker.ui.theme.Deepblue
 import com.don.hustletracker.ui.theme.card
-import com.don.hustletracker.ui.theme.charcoalblue
 import com.don.hustletracker.ui.theme.focused
 import com.don.hustletracker.ui.theme.gold
 import com.don.hustletracker.ui.theme.jetblack
 import com.don.hustletracker.ui.theme.white
+import com.don.hustletracker.viewmodel.TaskViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TaskScreen(navController: NavController){
+fun TaskScreen(navController: NavController, taskViewModel: TaskViewModel
+) {
+    val tasks by taskViewModel.tasks.collectAsState() // Get live tasks from ViewModel
 
-    //Scaffold
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF121212))
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
 
-    var selectedIndex by remember { mutableStateOf(0) }
+        Text(
+            text = "Your Tasks",
+            color = Color.White,
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
 
-    Scaffold (
-        //TopBar
-        topBar = {
-            TopAppBar(
-                title = { Text("Tasks Completed") },
-                Modifier.background(jetblack),
-                navigationIcon = {
-                    IconButton(onClick = { /* Handle back/nav */ }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Black,
-                    titleContentColor = Color.White,
-                    navigationIconContentColor = Color.White
-                )
-            )
-        },
+        LazyColumn {
+            items(tasks) { task ->
+                var checked by remember { mutableStateOf(false) }
 
-        //FloatingActionButton
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { /* Add action */ },
-                containerColor = gold,
-                contentColor = Color.Black
-            ) {
-                Icon(Icons.Default.Add, contentDescription = "Add")
-            }
-        },
-        content = { paddingValues ->
-            Column (
-                modifier = Modifier
-                    .padding(paddingValues)
-                    .fillMaxSize()
-                    .background(jetblack)
-            ) {
-                Text(text ="Here's what you've crushed today:",
-                    color = white,
-                    style = MaterialTheme.typography.headlineLarge,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
-                val completedTasks = listOf (
-                    "Read 100 pages of a book",
-                    "Morning workout done",
-                    "Completed 2 freelance tasks",
-                    "Tracked daily expense"
-                )
-                LazyColumn{
-                    items(completedTasks) { task ->
-                        Card(
-                            modifier = Modifier.background(focused).fillMaxWidth()
-                                .padding(vertical = 8.dp),
-                            shape = RoundedCornerShape(12.dp),
-                            colors = CardDefaults.cardColors(containerColor = card)
-                        ) {
-                            Row(
-                                modifier = Modifier.padding(16.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                            ) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
+                    elevation = CardDefaults.cardElevation(4.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF1E1E1E))
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Checkbox(
+                            checked = checked,
+                            onCheckedChange = { isChecked ->
+                                checked = isChecked
+                                // Optional: handle completed tasks
+                            },
+                            colors = CheckboxDefaults.colors(
+                                checkedColor = Color(0xFFFFD700),
+                                uncheckedColor = Color.White
+                            )
+                        )
 
+                        Spacer(modifier = Modifier.width(8.dp))
 
-                            }
+                        Text(
+                            text = task.description,
+                            color = if (checked) Color.Gray else Color.White,
+                            textDecoration = if (checked) TextDecoration.LineThrough else TextDecoration.None,
+                            modifier = Modifier.weight(1f)
+                        )
+
+                        IconButton(onClick = {
+                            taskViewModel.deleteTask(task)
+                        }) {
+                            Icon(Icons.Default.Delete, contentDescription = "Delete", tint = Color.Red)
                         }
                     }
-
-
                 }
             }
-            }
+        }
+
+        Button(onClick = {
+            navController.navigate(ROUT_ADDTASK)
+
+        },
+            colors = ButtonDefaults.buttonColors(gold),
+            shape = RoundedCornerShape(10.dp),
+            modifier = Modifier.fillMaxWidth().padding(start =20.dp, end = 20.dp).height(50.dp)
+
+        ) {
+            Text( text = "Add Task",
+                fontSize = 20.sp,
             )
+        }
 
-            //End of scaffold
-
-
-
-
+    }
 
 }
 
-
 @Preview(showBackground = true)
 @Composable
-fun TaskScreenPreview(){
-    TaskScreen(navController= rememberNavController())
+fun TaskScreenPreview() {
+    val fakeViewModel = object : TaskViewModel(
+        repository = TaskRepository(object : TaskDao {
+            override suspend fun insertTask(task: Task) {}
+            override suspend fun deleteTask(task: Task) {}
+            override suspend fun getAllTasks(): List<Task> = listOf(
+                Task(1, "Preview Task 1"),
+                Task(2, "Preview Task 2")
+            )
+        })
+    ) {}
+
+    TaskScreen(navController = rememberNavController(), taskViewModel = fakeViewModel)
 }

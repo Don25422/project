@@ -11,8 +11,8 @@ android {
 
     defaultConfig {
         applicationId = "com.don.hustletracker"
-        minSdk = 21
-        targetSdk = 35
+        minSdk = 23
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.benchmark.macro)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -72,5 +73,5 @@ dependencies {
 
     //Livedata
     implementation ("androidx.compose.runtime:runtime-livedata:1.6.4")
-
+    implementation ("androidx.compose.material:material-icons-extended")
 }

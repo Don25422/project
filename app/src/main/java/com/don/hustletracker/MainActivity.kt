@@ -4,22 +4,23 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.don.hustletracker.navigation.AppNavHost
-import com.don.hustletracker.ui.theme.HustleTrackerTheme
+import androidx.navigation.compose.rememberNavController
+import com.don.hustletracker.data.BusinessLogDatabase
+import com.don.hustletracker.repository.BusinessLogRepository
+import com.don.hustletracker.viewmodel.BusinessLogViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            AppNavHost()
+            val navController = rememberNavController()
+            val database = BusinessLogDatabase.getDatabase(applicationContext)
+            val repository = BusinessLogRepository(database.businessLogDao())
+            val businessLogViewModel = BusinessLogViewModel(repository)
+
+
+
         }
     }
 }

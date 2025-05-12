@@ -18,10 +18,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -117,7 +119,8 @@ fun DashboardScreen(navController: NavController){
                 .fillMaxWidth()
                 .padding(8.dp)
                 .height(100.dp),
-                colors = CardDefaults.cardColors(charcoalblue)
+                colors = CardDefaults.cardColors(charcoalblue),
+                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
 
 
 
@@ -128,13 +131,29 @@ fun DashboardScreen(navController: NavController){
                         contentDescription = "home",
                         modifier = Modifier.padding(start = 20.dp, top = 30.dp)
                     )
+                    Column {
+                        Text(
+                            text = "Total Earnings",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = Color.White
+                        )
 
-                    Text(text = "Trading journal summary",
-                        color = white,
-                        fontSize = 25.sp,
-                        modifier = Modifier.padding(start = 20.dp, top = 30.dp)
 
-                    )
+                        val totalEarnings = null
+                        Text(
+                           text = "Ksh ${String.format("%,d", totalEarnings)}",
+                            style = MaterialTheme.typography.headlineSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = "Today: Ksh 750",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color.White.copy(alpha = 0.8f)
+                        )
+                    }
+
                 }
 
             }
