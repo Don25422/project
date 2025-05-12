@@ -1,84 +1,72 @@
-package com.don.hustletracker.ui.screens.earn
+package com.don.hustletracker.ui.screens.earning
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import com.don.hustletracker.model.Earning
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.don.hustletracker.navigation.ROUT_ADDEARNING
+import com.don.hustletracker.ui.theme.jetblack
+import com.don.hustletracker.ui.theme.white
 import com.don.hustletracker.viewmodel.EarningViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EarningScreen(viewModel: EarningViewModel, navController: NavHostController) {
-    val earnings by viewModel.allEarnings.collectAsState()
+fun EarningScreen(
+    viewModel: EarningViewModel,
+    navController: NavHostController
+) {
+    val earnings by viewModel.allEarnings.collectAsStateWithLifecycle()
+    val totalEarnings = earnings.sumOf { it.amount }
+    val goal = 10000.0 // Example goal
 
-    var description by remember { mutableStateOf("") }
-    var amount by remember { mutableStateOf("") }
-
-    Column(Modifier.padding(16.dp)) {
-        BasicTextField(
-            value = description,
-            onValueChange = { description = it },
-            modifier = Modifier.fillMaxWidth().padding(8.dp),
-            decorationBox = { innerTextField ->
-                Box(Modifier.padding(8.dp)) {
-                    if (description.isEmpty()) Text("Description")
-                    innerTextField()
-                }
+    Scaffold(
+        topBar = { TopAppBar(title = { Text("Earnings",color = white) }) },
+        floatingActionButton = {
+            FloatingActionButton(onClick = {
+                navController.navigate(ROUT_ADDEARNING)
+            }) {
+                Icon(Icons.Default.Add, contentDescription = "Add Earning")
             }
-        )
-
-        BasicTextField(
-            value = amount,
-            onValueChange = { amount = it },
-            modifier = Modifier.fillMaxWidth().padding(8.dp),
-            decorationBox = { innerTextField ->
-                Box(Modifier.padding(8.dp)) {
-                    if (amount.isEmpty()) Text("Amount")
-                    innerTextField()
-                }
-            }
-        )
-
-        Button(onClick = {
-            val amt = amount.toDoubleOrNull()
-            if (description.isNotBlank() && amt != null) {
-                viewModel.insertEarning(Earning(description = description, amount = amt))
-                description = ""
-                amount = ""
-            }
-        }) {
-            Text("Save Earning")
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        LazyColumn {
-            items(earnings.size) { index ->
-                val earn = earnings[index]
-                Row(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text("${earn.description}: ${earn.amount}")
-                    IconButton(onClick = { viewModel.deleteEarning(earn) }) {
-                        Icon(Icons.Default.Delete, contentDescription = "Delete")
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize()
+                .background(jetblack)
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+        ) {
+            Text("Total Earnings: Ksh $totalEarnings", style = MaterialTheme.typography.headlineSmall,color = white)
+            Spacer(modifier = Modifier.height(12.dp))
+            LinearProgressIndicator(
+                progress = (totalEarnings / goal).toFloat().coerceIn(0f, 1f),
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+            Text("Earning History", style = MaterialTheme.typography.titleMedium,color = white)
+            Spacer(modifier = Modifier.height(8.dp))
+            LazyColumn {
+                items(earnings) { earning ->
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp)
+                    ) {
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Text(text = "Ksh ${earning.amount}", style = MaterialTheme.typography.bodyLarge)
+                            Text(text = earning.description, style = MaterialTheme.typography.bodySmall)
+                        }
                     }
                 }
             }
         }
     }
 }
-
-
-
-

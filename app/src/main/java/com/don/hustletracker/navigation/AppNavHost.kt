@@ -1,5 +1,7 @@
 package com.don.hustletracker.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -7,9 +9,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.don.hustletracker.data.AppDatabase
 import com.don.hustletracker.data.BusinessLogDatabase
 import com.don.hustletracker.data.UserDatabase
@@ -18,15 +22,19 @@ import com.don.hustletracker.model.Health
 import com.don.hustletracker.repository.BusinessLogRepository
 import com.don.hustletracker.repository.TaskRepository
 import com.don.hustletracker.repository.UserRepository
+import com.don.hustletracker.ui.screens.ProductScreen.AddProductScreen
 import com.don.hustletracker.ui.screens.about.AboutScreen
 import com.don.hustletracker.ui.screens.auth.LoginScreen
 import com.don.hustletracker.ui.screens.auth.RegisterScreen
 import com.don.hustletracker.ui.screens.dashboard.DashboardScreen
 import com.don.hustletracker.ui.screens.earn.AddEarningScreen
-import com.don.hustletracker.ui.screens.earn.EarningScreen
+import com.don.hustletracker.ui.screens.earning.EarningScreen
 import com.don.hustletracker.ui.screens.health.AddHealthScreen
 import com.don.hustletracker.ui.screens.health.HealthScreen
 import com.don.hustletracker.ui.screens.home.HomeScreen
+import com.don.hustletracker.ui.screens.pay.PayScreen
+import com.don.hustletracker.ui.screens.request.EditProductScreen
+import com.don.hustletracker.ui.screens.request.ProductListScreen
 import com.don.hustletracker.ui.screens.task.AddtaskScreen
 import com.don.hustletracker.ui.screens.task.TaskScreen
 import com.don.hustletracker.ui.screens.welcomscreens.SplashScreen
@@ -34,12 +42,14 @@ import com.don.hustletracker.ui.screens.welcomscreens.WelcomeScreen
 import com.don.hustletracker.ui.screens.welcomscreens.WelcomeScreen2
 import com.don.hustletracker.viewmodel.*
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     earningViewModel: EarningViewModel,
-    startDestination: String = ROUT_ADDEARNING,
+    startDestination: String = ROUT_EARNING,
+    productViewModel: ProductViewModel = viewModel(),
 
 ) {
     val context = LocalContext.current
@@ -112,6 +122,28 @@ fun AppNavHost(
         composable(ROUT_HEALTH) { HealthScreen(navController, dummyHealthData) }
 
         // Business Log
+        // PRODUCTS
+        composable(ROUT_ADD_PRODUCT) {
+            AddProductScreen(navController, productViewModel)
+        }
+
+        composable(ROUT_PRODUCT_LIST) {
+            ProductListScreen(navController, productViewModel)
+        }
+
+        composable(
+            route = ROUT_EDIT_PRODUCT,
+            arguments = listOf(navArgument("productId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val productId = backStackEntry.arguments?.getInt("productId")
+            if (productId != null) {
+                EditProductScreen(productId, navController, productViewModel)
+            }
+        }
+        composable(ROUT_PAY) {
+            PayScreen(navController)
+        }
+
 
 
 

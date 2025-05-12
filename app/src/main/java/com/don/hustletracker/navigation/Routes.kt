@@ -21,4 +21,12 @@ const val ROUTE_BUSINESS_LOG_LIST = "business_log_list"
 const val ROUTE_ADD_BUSINESS_LOG = "add_business_log"
 const val ROUTE_VIEW_BUSINESS_LOG = "view_business_log"
 const val ROUTE_EDIT_BUSINESS_LOG = "edit_business_log"
+//Products
 
+const val ROUT_ADD_PRODUCT = "add_product"
+const val ROUT_PRODUCT_LIST = "product_list"
+const val ROUT_EDIT_PRODUCT = "edit_product/{productId}"
+
+// ✅ Helper function for navigation
+fun editProductRoute(productId: Int) = "edit_product/$productId"
+const val ROUT_PAY = "pay"
