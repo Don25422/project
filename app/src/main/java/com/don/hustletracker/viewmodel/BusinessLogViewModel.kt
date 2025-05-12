@@ -1,20 +1,22 @@
 package com.don.hustletracker.viewmodel
 
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.don.hustletracker.model.BusinessLog
 import com.don.hustletracker.repository.BusinessLogRepository
-import com.don.hustletracker.repository.TaskRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class BusinessLogViewModel(private val repository: TaskRepository) : ViewModel() {
+class BusinessLogViewModel(private val repository: BusinessLogRepository) : ViewModel() {
 
     private val _logs = MutableStateFlow<List<BusinessLog>>(emptyList())
     val logs: StateFlow<List<BusinessLog>> = _logs
+
+    init {
+        loadLogs()
+    }
 
     fun loadLogs() {
         viewModelScope.launch {

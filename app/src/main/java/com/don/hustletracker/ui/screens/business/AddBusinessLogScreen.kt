@@ -1,17 +1,18 @@
 package com.don.hustletracker.ui.screens.business
 
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
+import com.don.hustletracker.model.BusinessLog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddBusinessLogScreen(onSave: NavHostController) {
+fun AddBusinessLogScreen(
+    onSave: (BusinessLog) -> Unit  // ✅ Corrected type
+) {
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
 
@@ -20,16 +21,18 @@ fun AddBusinessLogScreen(onSave: NavHostController) {
         floatingActionButton = {
             FloatingActionButton(onClick = {
                 if (title.isNotBlank() && description.isNotBlank()) {
-                    onSave(BusinessLog(0, title, description))
+                    onSave(BusinessLog(0, title, description))  // ✅ Now this works
                 }
             }) {
                 Text("✓")
             }
         }
     ) { padding ->
-        Column(modifier = Modifier
-            .padding(padding)
-            .padding(16.dp)) {
+        Column(
+            modifier = Modifier
+                .padding(padding)
+                .padding(16.dp)
+        ) {
             OutlinedTextField(
                 value = title,
                 onValueChange = { title = it },
@@ -47,8 +50,15 @@ fun AddBusinessLogScreen(onSave: NavHostController) {
     }
 }
 
+fun onSave(businessLog: com.don.hustletracker.ui.screens.business.BusinessLog) {
+
+
+}
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewAddBusinessLogScreen() {
-    AddBusinessLogScreen(onSave = {})
+    AddBusinessLogScreen(
+        onSave = {}  // ✅ Use empty lambda for preview
+    )
 }

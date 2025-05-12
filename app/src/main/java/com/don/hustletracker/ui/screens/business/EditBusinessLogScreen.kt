@@ -1,17 +1,19 @@
 package com.don.hustletracker.ui.screens.business
 
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
+import com.don.hustletracker.model.BusinessLog // ✅ Make sure this import is correct
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditBusinessLogScreen(log: NavHostController, onUpdate: (BusinessLog) -> Unit) {
+fun EditBusinessLogScreen(
+    log: BusinessLog,
+    onUpdate: (BusinessLog) -> Unit
+) {
     var title by remember { mutableStateOf(log.title) }
     var description by remember { mutableStateOf(log.description) }
 
@@ -25,9 +27,11 @@ fun EditBusinessLogScreen(log: NavHostController, onUpdate: (BusinessLog) -> Uni
             }
         }
     ) { padding ->
-        Column(modifier = Modifier
-            .padding(padding)
-            .padding(16.dp)) {
+        Column(
+            modifier = Modifier
+                .padding(padding)
+                .padding(16.dp)
+        ) {
             OutlinedTextField(
                 value = title,
                 onValueChange = { title = it },
@@ -49,6 +53,12 @@ fun EditBusinessLogScreen(log: NavHostController, onUpdate: (BusinessLog) -> Uni
 @Composable
 fun PreviewEditBusinessLogScreen() {
     EditBusinessLogScreen(
-        log = BusinessLog(2, "Sale", "Sold 10 units")
-    ) { }
+        log = BusinessLog(2, "Sale", "Sold 10 units"),
+        onUpdate = {}
+    )
+}
+
+fun EditBusinessLogScreen(log: com.don.hustletracker.ui.screens.business.BusinessLog, onUpdate: (BusinessLog) -> Unit) {
+
+
 }
