@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.don.hustletracker.data.EarningDatabase
-import com.don.hustletracker.model.NewEarning
+import com.don.hustletracker.model.Earning
 import com.don.hustletracker.repository.EarningRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
@@ -21,11 +21,11 @@ open class EarningViewModel(application: Application) : AndroidViewModel(applica
         repo = EarningRepository(dao)
     }
 
-    fun insertEarning(earning: NewEarning) = viewModelScope.launch {
+    fun insertEarning(earning: Earning) = viewModelScope.launch {
         repo.insert(earning)
     }
 
-    fun deleteEarning(earning: NewEarning) = viewModelScope.launch {
+    fun deleteEarning(earning: Earning) = viewModelScope.launch {
         repo.delete(earning)
     }
 }

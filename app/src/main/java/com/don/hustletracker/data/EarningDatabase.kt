@@ -4,9 +4,10 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.don.hustletracker.model.NewEarning
+import com.don.hustletracker.model.Earning
 
-@Database(entities = [NewEarning::class], version = 1)
+
+@Database(entities = [Earning::class], version = 1)
 abstract class EarningDatabase : RoomDatabase() {
     abstract fun earningDao(): EarningDao
 

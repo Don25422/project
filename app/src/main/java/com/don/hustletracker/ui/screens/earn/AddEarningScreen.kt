@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.don.hustletracker.model.NewEarning
+import com.don.hustletracker.model.Earning
 import com.don.hustletracker.viewmodel.EarningViewModel
 
 @Composable
@@ -49,7 +49,7 @@ fun AddEarningScreen(
             onClick = {
                 val amountDouble = amount.toDoubleOrNull()
                 if (description.isNotBlank() && amountDouble != null && viewModel != null) {
-                    viewModel.insertEarning(NewEarning(description = description, amount = amountDouble))
+                    viewModel.insertEarning(Earning(description = description, amount = amountDouble))
                     navController?.popBackStack()
                 }
             },

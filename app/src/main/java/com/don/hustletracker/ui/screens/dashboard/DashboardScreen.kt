@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.don.hustletracker.R
+import com.don.hustletracker.navigation.ROUT_EARNING
 import com.don.hustletracker.navigation.ROUT_TASK
 import com.don.hustletracker.ui.theme.Deepblue
 import com.don.hustletracker.ui.theme.EmeraldGreen
@@ -118,7 +119,8 @@ fun DashboardScreen(navController: NavController){
             Card(modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
-                .height(100.dp),
+                .height(100.dp)
+                .clickable { navController.navigate(ROUT_EARNING) },
                 colors = CardDefaults.cardColors(charcoalblue),
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
 

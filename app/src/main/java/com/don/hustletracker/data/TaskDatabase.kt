@@ -9,7 +9,7 @@ import com.don.hustletracker.model.Task
 @Database(entities = [Task::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun taskDao(): TaskDao
-    abstract fun earningDao(): EarningDao
+
 
 
     companion object {

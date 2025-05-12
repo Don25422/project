@@ -1,6 +1,8 @@
 package com.don.hustletracker.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -11,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import com.don.hustletracker.data.AppDatabase
 import com.don.hustletracker.data.BusinessLogDatabase
 import com.don.hustletracker.data.UserDatabase
+import com.don.hustletracker.model.Earning
 import com.don.hustletracker.model.Health
 import com.don.hustletracker.repository.BusinessLogRepository
 import com.don.hustletracker.repository.TaskRepository
@@ -29,17 +32,19 @@ import com.don.hustletracker.ui.screens.task.TaskScreen
 import com.don.hustletracker.ui.screens.welcomscreens.SplashScreen
 import com.don.hustletracker.ui.screens.welcomscreens.WelcomeScreen
 import com.don.hustletracker.ui.screens.welcomscreens.WelcomeScreen2
-import com.don.hustletracker.ui.screens.business.*
 import com.don.hustletracker.viewmodel.*
 
 @Composable
 fun AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = ROUT_EARNING,
-    earningViewModel: EarningViewModel
+    earningViewModel: EarningViewModel,
+    startDestination: String = ROUT_ADDEARNING,
+
 ) {
     val context = LocalContext.current
+
+
 
     // TASK ViewModel setup
     val taskDao = AppDatabase.getDatabase(context).taskDao()
@@ -85,7 +90,9 @@ fun AppNavHost(
         }
 
         // Welcome Screens
-        composable(ROUT_SPLASH) { SplashScreen(navController) }
+        composable(ROUT_SPLASH) {
+            SplashScreen(navController)
+        }
         composable(ROUT_WELCOME) { WelcomeScreen(navController) }
         composable(ROUT_WELCOME2) { WelcomeScreen2(navController) }
 
@@ -95,7 +102,9 @@ fun AppNavHost(
         composable(ROUT_TASK) { TaskScreen(navController, taskViewModel) }
 
         // Earnings
-        composable(ROUT_EARNING) { EarningScreen(navController) }
+        composable(ROUT_EARNING) { 
+            EarningScreen(viewModel = earningViewModel, navController)
+        }
         composable(ROUT_ADDEARNING) { AddEarningScreen(navController) }
 
         // Health
@@ -104,27 +113,8 @@ fun AppNavHost(
 
         // Business Log
 
-        composable("add_business_log") {
-            AddBusinessLogScreen(
-                navController = navController,
-                onSave = { log -> businessLogViewModel.insertBusinessLog(log) }
-            )
-        }
-        composable("view_business_log/{logId}") {
-            ViewBusinessLogScreen(navController)
-        }
-        composable("edit_business_log/{logId}") {
-            EditBusinessLogScreen(navController)
-        }
-        composable("business_log_list") {
-            BusinessLogListScreen(
-                navController = navController,
-                logs = businessLogViewModel.businessLogs.collectAsState().value,
-                onLogClick = { log ->
-                    navController.navigate("view_business_log/${log.id}")
-                }
-            )
-        }
+
+
 
     }
 }

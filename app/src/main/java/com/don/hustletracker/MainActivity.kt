@@ -4,10 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.don.hustletracker.data.BusinessLogDatabase
+import com.don.hustletracker.navigation.AppNavHost
 import com.don.hustletracker.repository.BusinessLogRepository
 import com.don.hustletracker.viewmodel.BusinessLogViewModel
+import com.don.hustletracker.viewmodel.EarningViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -15,9 +18,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()
-            val database = BusinessLogDatabase.getDatabase(applicationContext)
-            val repository = BusinessLogRepository(database.businessLogDao())
-            val businessLogViewModel = BusinessLogViewModel(repository)
+            val earningViewModel : EarningViewModel = viewModel()
+            AppNavHost(navController = navController, earningViewModel = earningViewModel)
+
 
 
 
