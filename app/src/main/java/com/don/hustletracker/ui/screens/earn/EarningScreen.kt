@@ -25,17 +25,23 @@ fun EarningScreen(
 ) {
     val earnings by viewModel.allEarnings.collectAsStateWithLifecycle()
     val totalEarnings = earnings.sumOf { it.amount }
-    val goal = 10000.0 // Example goal
+    val goal = 10000.0
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Earnings",color = white) }) },
+        topBar = {
+            TopAppBar(
+                title = { Text("Earnings", color = white) },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = jetblack)
+            )
+        },
         floatingActionButton = {
             FloatingActionButton(onClick = {
                 navController.navigate(ROUT_ADDEARNING)
             }) {
                 Icon(Icons.Default.Add, contentDescription = "Add Earning")
             }
-        }
+        },
+        containerColor = jetblack
     ) { padding ->
         Column(
             modifier = Modifier
@@ -44,25 +50,37 @@ fun EarningScreen(
                 .background(jetblack)
                 .padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
-            Text("Total Earnings: Ksh $totalEarnings", style = MaterialTheme.typography.headlineSmall,color = white)
+            Text(
+                "Total Earnings: Ksh $totalEarnings",
+                style = MaterialTheme.typography.headlineSmall,
+                color = white
+            )
             Spacer(modifier = Modifier.height(12.dp))
             LinearProgressIndicator(
                 progress = (totalEarnings / goal).toFloat().coerceIn(0f, 1f),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                color = MaterialTheme.colorScheme.primary
             )
             Spacer(modifier = Modifier.height(24.dp))
-            Text("Earning History", style = MaterialTheme.typography.titleMedium,color = white)
+            Text("Earning History", style = MaterialTheme.typography.titleMedium, color = white)
             Spacer(modifier = Modifier.height(8.dp))
             LazyColumn {
                 items(earnings) { earning ->
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 4.dp)
+                            .padding(vertical = 4.dp),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
-                            Text(text = "Ksh ${earning.amount}", style = MaterialTheme.typography.bodyLarge)
-                            Text(text = earning.description, style = MaterialTheme.typography.bodySmall)
+                            Text(
+                                text = "Ksh ${earning.amount}",
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                            Text(
+                                text = earning.description,
+                                style = MaterialTheme.typography.bodySmall
+                            )
                         }
                     }
                 }

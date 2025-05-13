@@ -35,6 +35,7 @@ import com.don.hustletracker.ui.theme.white
 
 // Navigation Routes
 import com.don.hustletracker.navigation.ROUT_ADD_PRODUCT
+import com.don.hustletracker.navigation.ROUT_DASHBOARD
 import com.don.hustletracker.navigation.ROUT_PRODUCT_LIST
 
 // ViewModel
@@ -65,7 +66,7 @@ fun AddProductScreen(navController: NavController, viewModel: ProductViewModel) 
                 title = { Text("Add Gig", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = white) },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(jetblack),
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { navController.navigate(ROUT_DASHBOARD) }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = white)
                     }
                 },
@@ -199,11 +200,6 @@ fun BottomNavigationBar(navController: NavController) {
             icon = { Icon(Icons.Default.AddCircle, contentDescription = "Add Product") },
             label = { Text("Add") }
         )
-        NavigationBarItem(
-            selected = false,
-            onClick = { navController.navigate(ROUT_ADD_PRODUCT) },
-            icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
-            label = { Text("Profile") }
-        )
+
     }
 }

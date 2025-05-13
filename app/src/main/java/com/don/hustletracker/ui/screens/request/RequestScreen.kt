@@ -76,17 +76,11 @@ fun ProductListScreen(navController: NavController, viewModel: ProductViewModel)
                             expanded = showMenu,
                             onDismissRequest = { showMenu = false }
                         ) {
+
                             DropdownMenuItem(
-                                text = { Text("Product List") },
+                                text = { Text("Pay") },
                                 onClick = {
-                                    navController.navigate(ROUT_PRODUCT_LIST)
-                                    showMenu = false
-                                }
-                            )
-                            DropdownMenuItem(
-                                text = { Text("Profile") },
-                                onClick = {
-                                    navController.navigate(ROUT_ADD_PRODUCT)
+                                    navController.navigate(ROUT_PAY)
                                     showMenu = false
                                 }
                             )
@@ -318,11 +312,6 @@ fun BottomNavigationBar1(navController: NavController) {
         containerColor = Color(0xFF0C0C0C),
         contentColor = Color.White
     ) {
-        NavigationBarItem(
-            selected = false,
-            onClick = { navController.navigate(ROUT_PRODUCT_LIST) },
-            icon = { Icon(Icons.Default.Home, contentDescription = "Product List") },
-            label = { Text("Home") }
-        )
+
     }
 }

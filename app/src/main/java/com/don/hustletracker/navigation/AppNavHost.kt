@@ -2,9 +2,7 @@ package com.don.hustletracker.navigation
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -15,11 +13,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.don.hustletracker.data.AppDatabase
-import com.don.hustletracker.data.BusinessLogDatabase
+import com.don.hustletracker.data.HealthDatabase
 import com.don.hustletracker.data.UserDatabase
-import com.don.hustletracker.model.Earning
 import com.don.hustletracker.model.Health
-import com.don.hustletracker.repository.BusinessLogRepository
+import com.don.hustletracker.repository.HealthRepository
 import com.don.hustletracker.repository.TaskRepository
 import com.don.hustletracker.repository.UserRepository
 import com.don.hustletracker.ui.screens.ProductScreen.AddProductScreen
@@ -41,6 +38,9 @@ import com.don.hustletracker.ui.screens.welcomscreens.SplashScreen
 import com.don.hustletracker.ui.screens.welcomscreens.WelcomeScreen
 import com.don.hustletracker.ui.screens.welcomscreens.WelcomeScreen2
 import com.don.hustletracker.viewmodel.*
+import com.don.hustletracker.navigation.*
+
+
 
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
@@ -48,13 +48,10 @@ fun AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     earningViewModel: EarningViewModel,
-    startDestination: String = ROUT_EARNING,
+    startDestination: String = ROUT_SPLASH,
     productViewModel: ProductViewModel = viewModel(),
-
 ) {
     val context = LocalContext.current
-
-
 
     // TASK ViewModel setup
     val taskDao = AppDatabase.getDatabase(context).taskDao()
@@ -66,18 +63,19 @@ fun AppNavHost(
     val userRepository = UserRepository(userDao)
     val authViewModel = AuthViewModel(userRepository)
 
-    // BUSINESS LOG ViewModel setup
-    val businessLogDao = BusinessLogDatabase.getDatabase(context).businessLogDao()
-    val businessLogRepository = BusinessLogRepository(businessLogDao)
-    val businessLogFactory = BusinessLogViewModelFactory(businessLogRepository)
-    val businessLogViewModel: BusinessLogViewModel = viewModel(factory = businessLogFactory)
+    // HEALTH ViewModel setup
+    val dao = HealthDatabase.getDatabase(context).healthDao()
+    val repository = remember { HealthRepository(dao) }
+    val healthViewModel: HealthViewModel = viewModel(factory = HealthViewModelFactory(repository))
 
+    var healthList by remember { mutableStateOf(listOf<Health>()) }
 
-    // Dummy health data
-    val dummyHealthData = listOf(
-        Health(activity = "Jogging", durationMinutes = 30, date = "2025-05-11"),
-        Health(activity = "Yoga", durationMinutes = 45, date = "2025-05-10")
-    )
+    // Load once
+    LaunchedEffect(Unit) {
+        healthViewModel.loadHealth {
+            healthList = it
+        }
+    }
 
     NavHost(
         navController = navController,
@@ -100,9 +98,7 @@ fun AppNavHost(
         }
 
         // Welcome Screens
-        composable(ROUT_SPLASH) {
-            SplashScreen(navController)
-        }
+        composable(ROUT_SPLASH) { SplashScreen(navController) }
         composable(ROUT_WELCOME) { WelcomeScreen(navController) }
         composable(ROUT_WELCOME2) { WelcomeScreen2(navController) }
 
@@ -112,25 +108,20 @@ fun AppNavHost(
         composable(ROUT_TASK) { TaskScreen(navController, taskViewModel) }
 
         // Earnings
-        composable(ROUT_EARNING) { 
-            EarningScreen(viewModel = earningViewModel, navController)
+        composable(ROUT_EARNING) {
+            EarningScreen(viewModel = earningViewModel, navController = navController)
         }
-        composable(ROUT_ADDEARNING) { AddEarningScreen(navController) }
+        composable(ROUT_ADDEARNING) {
+            AddEarningScreen(viewModel = earningViewModel, navController = navController)
+        }
 
-        // Health
-        composable(ROUT_ADDHEALTH) { AddHealthScreen(navController) }
-        composable(ROUT_HEALTH) { HealthScreen(navController, dummyHealthData) }
-
-        // Business Log
-        // PRODUCTS
+        // Business Log / Product Screens
         composable(ROUT_ADD_PRODUCT) {
             AddProductScreen(navController, productViewModel)
         }
-
         composable(ROUT_PRODUCT_LIST) {
             ProductListScreen(navController, productViewModel)
         }
-
         composable(
             route = ROUT_EDIT_PRODUCT,
             arguments = listOf(navArgument("productId") { type = NavType.IntType })
@@ -140,13 +131,28 @@ fun AppNavHost(
                 EditProductScreen(productId, navController, productViewModel)
             }
         }
+
         composable(ROUT_PAY) {
             PayScreen(navController)
         }
 
+        // Health Screens
+        composable(ROUT_HEALTH) {
+            HealthScreen(
+                navController = navController,
+                healthData = healthList
+            )
+        }
 
-
-
-
+        composable(ROUT_ADDHEALTH) {
+            AddHealthScreen(navController = navController) { newHealth ->
+                healthViewModel.insertHealth(newHealth) {
+                    healthViewModel.loadHealth {
+                        healthList = it
+                        navController.navigate(ROUT_HEALTH)
+                    }
+                }
+            }
+        }
     }
 }

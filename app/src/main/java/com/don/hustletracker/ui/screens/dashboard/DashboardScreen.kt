@@ -32,7 +32,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.don.hustletracker.R
+import com.don.hustletracker.navigation.ROUT_ADD_PRODUCT
 import com.don.hustletracker.navigation.ROUT_EARNING
+import com.don.hustletracker.navigation.ROUT_HEALTH
 import com.don.hustletracker.navigation.ROUT_TASK
 import com.don.hustletracker.ui.theme.Deepblue
 import com.don.hustletracker.ui.theme.EmeraldGreen
@@ -133,28 +135,15 @@ fun DashboardScreen(navController: NavController){
                         contentDescription = "home",
                         modifier = Modifier.padding(start = 20.dp, top = 30.dp)
                     )
-                    Column {
+
                         Text(
                             text = "Total Earnings",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = Color.White
+                            fontSize = 25.sp,
+                            color = Color.White,
+                            modifier = Modifier.padding(start = 20.dp, top = 30.dp)
                         )
 
 
-                        val totalEarnings = null
-                        Text(
-                           text = "Ksh ${String.format("%,d", totalEarnings)}",
-                            style = MaterialTheme.typography.headlineSmall,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = "Today: Ksh 750",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color.White.copy(alpha = 0.8f)
-                        )
-                    }
 
                 }
 
@@ -165,8 +154,12 @@ fun DashboardScreen(navController: NavController){
             Card(modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
-                .height(100.dp),
-                colors = CardDefaults.cardColors(charcoalblue)
+                .height(100.dp)
+                .clickable { navController.navigate(ROUT_ADD_PRODUCT) },
+                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+                colors = CardDefaults.cardColors(charcoalblue),
+
+
 
 
 
@@ -178,7 +171,7 @@ fun DashboardScreen(navController: NavController){
                         modifier = Modifier.padding(start = 20.dp, top = 30.dp)
                     )
 
-                    Text(text = "Investment snapshot",
+                    Text(text = "Gigs",
                         color = white,
                         fontSize = 25.sp,
                         modifier = Modifier.padding(start = 20.dp, top = 30.dp)
@@ -188,40 +181,15 @@ fun DashboardScreen(navController: NavController){
 
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
-
-            Card(modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-                .height(100.dp),
-                colors = CardDefaults.cardColors(charcoalblue)
-
-
-
-            ) {
-                Row {
-                    Image(
-                        painter = painterResource(R.drawable.img_8),
-                        contentDescription = "home",
-                        modifier = Modifier.padding(start = 20.dp, top = 30.dp)
-                    )
-
-                    Text(text = "Motivation quote of day",
-                        color = white,
-                        fontSize = 25.sp,
-                        modifier = Modifier.padding(start = 20.dp, top = 30.dp)
-
-                    )
-                }
-
-            }
 
             Spacer(modifier = Modifier.height(10.dp))
 
             Card(modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
-                .height(100.dp),
+                .height(100.dp)
+                .clickable { navController.navigate(ROUT_HEALTH) },
+                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
                 colors = CardDefaults.cardColors(charcoalblue)
 
 
